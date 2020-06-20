@@ -32,8 +32,8 @@ def add_tutorial(request):
         return JsonResponse(response, status=status.HTTP_201_CREATED)
     return JsonResponse(tutorial_serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def get_detail(request,id_tutorial):
+@api_view(['GET', 'PUT','DELETE'])
+def tutorials(request,id_tutorial):
     try:
         tutorial = Tutorial.objects.get(pk=id_tutorial)
     except Tutorial.DoesNotExist:
@@ -59,3 +59,7 @@ def get_detail(request,id_tutorial):
             }
             return Response(response)
         return JsonResponse(tutorial_serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        tutorial.delete()
+        response = {'code':'0', 'message':'Deleted Successfully'}
+        return JsonResponse(response,status=status.HTTP_204_NO_CONTENT)
